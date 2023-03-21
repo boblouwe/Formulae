@@ -4,17 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackageId />
+    <Version />
+    <Authors />
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Flee" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="ParameterOld.cs" />
-    <Compile Remove="OwnedValue(T).cs" />
-    <Compile Remove="Parameters.cs" />
-    <Compile Remove="FormulaOLd.cs" />
   </ItemGroup>
 
 </Project>

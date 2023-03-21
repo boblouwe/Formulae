@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 7.0.x
     - name: Set build script eXecutable
       run: chmod +x ./build.sh
-    - name: 'Run: Compile'
-      run: ./build.sh --target Compile --verbosity verbose
+    - name: 'Run: Nuke build'
+      run: ./build.sh --target Pack --verbosity verbose
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
