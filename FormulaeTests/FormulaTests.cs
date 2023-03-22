@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentAssertions;
 using Formulae;
 using Xunit;
@@ -9,8 +10,8 @@ namespace FormulaeTests
         [Fact]
         public void Formula_value_should_be_null_when_unevaluated()
         {
-            var realValue = new Constant("realValue", new Number(23.1, 1));
-            var meterReading = new Constant("meterReading", new Number(23.3, 1));
+            var realValue = new Constant("realValue", new Number("23.1", CultureInfo.InvariantCulture));
+            var meterReading = new Constant("meterReading", new Number("23,3"));
             var formulePar = new Formula("meterReading", "meterReading", new[] { meterReading });
             var formula = new Formula("AbsoluteError", "realValue - meterReading", new Variable[] { realValue, formulePar });
 
