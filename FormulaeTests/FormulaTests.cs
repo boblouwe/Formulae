@@ -1,27 +1,26 @@
 using System.Globalization;
 using FluentAssertions;
-using Formulae;
 using Xunit;
 
-namespace FormulaeTests
+namespace FormulaeTests;
+
+public class FormulaTests
 {
-    public class FormulaTests
+    [Fact]
+    public void Formula_value_should_be_null_when_unevaluated()
     {
-        [Fact]
-        public void Formula_value_should_be_null_when_unevaluated()
-        {
-            var realValue = new Constant("realValue", new Number("23.1", CultureInfo.InvariantCulture));
-            var meterReading = new Constant("meterReading", new Number("23,3"));
-            var formulePar = new Formula("meterReading", "meterReading", new[] { meterReading });
-            var formula = new Formula("AbsoluteError", "realValue - meterReading", new Variable[] { realValue, formulePar });
+        var realValue = new Constant("realValue", new Number("23.1", CultureInfo.InvariantCulture));
+        var meterReading = new Constant("meterReading", new Number("23,3"));
+        var formulePar = new Formula("meterReading", "meterReading", new[] { meterReading });
+        var formula = new Formula("AbsoluteError", "realValue - meterReading", new Variable[] { realValue, formulePar });
 
-            var evaluation = formula.Evaluate(EvaluationTrace.Current(nameof(Formula_value_should_be_null_when_unevaluated)));
-            evaluation.Number.Value.Should().Be(-0.2);
+        var evaluation = formula.Evaluate(EvaluationTrace.Current(nameof(Formula_value_should_be_null_when_unevaluated)));
+        evaluation.Number.Value.Should().Be(-0.2);
 
-            evaluation = formula.Reevaluate();
-            evaluation.Number.Precision.Should().Be(1);
+        evaluation = formula.Reevaluate();
+        evaluation.Number.Precision.Should().Be(1);
             
-        }
+    }
 /*
         [Fact]
         public void Formula_value_should_not_be_null_when_evaluated()
@@ -70,5 +69,4 @@ namespace FormulaeTests
             evaluationResult.Value.Value.Should().Be(100);
         }
         */
-    }
 }

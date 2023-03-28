@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace Formulae
@@ -7,7 +6,10 @@ namespace Formulae
     {
         private readonly double _doubleValue;
 
-        [Range(0, 15, ErrorMessage = "Precision must be between 0 and 15")]
+        public static CultureInfo DefaultCulture => CultureInfo.InvariantCulture;
+
+        public CultureInfo Culture { get; set; } = DefaultCulture;
+
         public int Precision { get; }
 
         public double Value
@@ -37,7 +39,7 @@ namespace Formulae
         }
 
         public Number(string value)
-            : this(value, CultureInfo.CurrentCulture)
+            : this(value, DefaultCulture)
         {
         }
         
@@ -56,33 +58,48 @@ namespace Formulae
 
         public Number(double value, int precision)
         {
-            if (precision is < 0 or > 15)
-            {
-                throw new ArgumentOutOfRangeException(nameof(precision), "Must be >= 0 and <= 15");
-            }
-
             var valuePrecision = GetPrecision(value);
             if (precision > valuePrecision)
             {
+                var valueString = value.ToString(CultureInfo.InvariantCulture);
                 throw new ArgumentOutOfRangeException(nameof(precision),
-                    $"Must be <= {valuePrecision}, i.e. precision of {value}");
+                    $"Must be <= {valuePrecision}, i.e. precision of {valueString}");
             }
             
             Value = value;
             Precision = precision;
         }
 
+        public void ResetCulture()
+        {
+            Culture = DefaultCulture;
+        }
+
         private static int GetPrecision(double value)
         {
-            var valueString = value.ToString(CultureInfo.InvariantCulture);
+            var valueString = value.ToString("G", CultureInfo.InvariantCulture);
             var decimalPointIndex = valueString.LastIndexOf('.');
 
-            return decimalPointIndex == -1 ? 0 : valueString[(decimalPointIndex + 1)..].Length;
+            if (!valueString.Contains('E'))
+            {
+                return decimalPointIndex == -1 ? 0 : valueString[(decimalPointIndex + 1)..].Length;
+            }
+
+            var decimals = 0;
+
+            var exponentSignPosition = valueString.LastIndexOf('E');
+            if (decimalPointIndex > -1)
+            {
+                decimals = exponentSignPosition - decimalPointIndex;
+            }
+
+            var exponent = int.Parse(valueString[(exponentSignPosition + 1)..]);
+            return decimals - exponent;
         }
 
         public override string ToString()
         {
-            return $"{Value}";
+            return Value.ToString("G", Culture);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Formulae;
 using Xunit;
 
 namespace FormulaeTests
